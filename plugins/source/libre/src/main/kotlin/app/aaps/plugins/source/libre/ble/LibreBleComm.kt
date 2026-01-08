@@ -237,13 +237,8 @@ class LibreBleComm @Inject constructor(
 
             aapsLogger.debug(LTag.BGSOURCE, "Scan result: $name (${device.address})")
 
-            // Determine sensor type from advertised services
-            val sensorType = determineSensorType(result)
-            if (sensorType != LibreSensorType.UNKNOWN) {
-                aapsLogger.info(LTag.BGSOURCE, "Found Libre sensor: $name ($sensorType)")
-                stopScan()
-                connectToDevice(device, sensorType)
-            }
+            // Notify callback of scan result
+            callback?.onScanResult(device, result.rssi)
         }
 
         override fun onScanFailed(errorCode: Int) {

@@ -3,7 +3,6 @@ package app.aaps.plugins.source.libre.service
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -30,6 +29,7 @@ import app.aaps.plugins.source.libre.R
 import app.aaps.plugins.source.libre.alerts.LibreAlertManager
 import app.aaps.plugins.source.libre.ble.LibreBleCallback
 import app.aaps.plugins.source.libre.ble.LibreBleComm
+import app.aaps.plugins.source.libre.ble.LibreBleError
 import app.aaps.plugins.source.libre.data.GlucoseQuality
 import app.aaps.plugins.source.libre.data.LibreConnectionState
 import app.aaps.plugins.source.libre.data.LibreGlucoseReading
@@ -278,7 +278,7 @@ class LibreService : DaggerService(), LibreBleCallback {
 
         serviceState = ServiceState.Connecting
 
-        val success = libreBleComm.connect(deviceAddress)
+        val success = libreBleComm.connectToAddress(deviceAddress, sensorType)
         if (!success) {
             serviceState = ServiceState.Error("Failed to initiate connection")
             scheduleReconnect()
@@ -288,7 +288,7 @@ class LibreService : DaggerService(), LibreBleCallback {
         handler.postDelayed({
             if (serviceState == ServiceState.Connecting) {
                 aapsLogger.warn(LTag.BGSOURCE, "Connection timeout")
-                libreBleComm.disconnect()
+                libreBleComm.disconnect("Connection timeout")
                 scheduleReconnect()
             }
         }, CONNECTION_TIMEOUT_MS)
@@ -297,7 +297,7 @@ class LibreService : DaggerService(), LibreBleCallback {
     fun disconnect() {
         aapsLogger.info(LTag.BGSOURCE, "Disconnecting")
         handler.removeCallbacksAndMessages(null)
-        libreBleComm.disconnect()
+        libreBleComm.disconnect("User requested")
         currentProtocol?.reset()
         serviceState = ServiceState.Idle
         reconnectAttempt = 0
@@ -333,7 +333,7 @@ class LibreService : DaggerService(), LibreBleCallback {
     private fun createProtocolCallback(): LibreProtocol.Callback {
         return object : LibreProtocol.Callback {
             override fun sendData(data: ByteArray) {
-                libreBleComm.writeCharacteristic(data)
+                libreBleComm.write(data)
             }
 
             override fun onGlucoseData(readings: List<LibreGlucoseReading>) {
@@ -370,43 +370,52 @@ class LibreService : DaggerService(), LibreBleCallback {
 
     // LibreBleCallback implementation
 
-    override fun onConnectionStateChanged(connected: Boolean, device: BluetoothDevice?) {
-        aapsLogger.debug(LTag.BGSOURCE, "Connection state changed: connected=$connected")
-
-        if (connected) {
-            libreState.lastConnectionTime = System.currentTimeMillis()
-        } else {
-            if (serviceState == ServiceState.Connected || serviceState == ServiceState.Authenticating) {
-                aapsLogger.warn(LTag.BGSOURCE, "Unexpected disconnection")
-                scheduleReconnect()
-            }
-        }
-    }
-
-    override fun onServicesDiscovered() {
-        aapsLogger.debug(LTag.BGSOURCE, "Services discovered, starting authentication")
+    override fun onConnected() {
+        aapsLogger.debug(LTag.BGSOURCE, "BLE connected")
+        libreState.lastConnectionTime = System.currentTimeMillis()
         serviceState = ServiceState.Authenticating
         currentProtocol?.startAuthentication()
     }
 
-    override fun onDataReceived(data: ByteArray) {
-        currentProtocol?.handleData(data)
+    override fun onDisconnected(reason: String) {
+        aapsLogger.debug(LTag.BGSOURCE, "BLE disconnected: $reason")
+
+        if (serviceState == ServiceState.Connected || serviceState == ServiceState.Authenticating) {
+            aapsLogger.warn(LTag.BGSOURCE, "Unexpected disconnection")
+            scheduleReconnect()
+        } else {
+            serviceState = ServiceState.Idle
+        }
     }
 
-    override fun onScanResult(device: BluetoothDevice, rssi: Int) {
-        aapsLogger.debug(LTag.BGSOURCE, "Scan result: ${device.name} (${device.address}) RSSI: $rssi")
-        // Scan results are typically handled by UI layer
-        // Here we just log them; UI can observe libreState
+    override fun onGlucoseData(readings: List<LibreGlucoseReading>) {
+        processGlucoseReadings(readings)
     }
 
-    override fun onScanFailed(errorCode: Int) {
-        aapsLogger.error(LTag.BGSOURCE, "Scan failed with error: $errorCode")
-        serviceState = ServiceState.Error("Scan failed: $errorCode")
+    override fun onSensorInfo(info: LibreSensorInfo) {
+        processSensorInfo(info)
     }
 
-    override fun onError(error: String) {
-        aapsLogger.error(LTag.BGSOURCE, "BLE error: $error")
-        serviceState = ServiceState.Error(error)
+    override fun onAuthenticationComplete(success: Boolean) {
+        if (success) {
+            aapsLogger.info(LTag.BGSOURCE, "Authentication successful")
+            serviceState = ServiceState.Connected
+            reconnectAttempt = 0
+            libreState.lastConnectionTime = System.currentTimeMillis()
+            updateNotification("Connected to ${libreState.sensorSerialNumber}")
+
+            // Request initial glucose data
+            currentProtocol?.requestGlucoseData()
+        } else {
+            aapsLogger.error(LTag.BGSOURCE, "Authentication failed")
+            serviceState = ServiceState.Error("Authentication failed")
+            scheduleReconnect()
+        }
+    }
+
+    override fun onError(error: LibreBleError, message: String) {
+        aapsLogger.error(LTag.BGSOURCE, "BLE error: $error - $message")
+        serviceState = ServiceState.Error(message)
 
         if (isServiceRunning && libreState.deviceAddress.isNotEmpty()) {
             scheduleReconnect()

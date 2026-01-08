@@ -23,6 +23,9 @@ import app.aaps.plugins.source.libre.LibreState
 import app.aaps.plugins.source.libre.R
 import app.aaps.plugins.source.libre.ble.LibreBleCallback
 import app.aaps.plugins.source.libre.ble.LibreBleComm
+import app.aaps.plugins.source.libre.ble.LibreBleError
+import app.aaps.plugins.source.libre.data.LibreGlucoseReading
+import app.aaps.plugins.source.libre.data.LibreSensorInfo
 import app.aaps.plugins.source.libre.data.LibreSensorType
 import app.aaps.plugins.source.libre.service.LibreService
 import dagger.android.support.DaggerAppCompatActivity
@@ -201,32 +204,40 @@ class LibrePairingActivity : DaggerAppCompatActivity(), LibreBleCallback {
 
         // Sort by signal strength
         foundDevices.sortByDescending { it.rssi }
-        deviceAdapter.updateDevices(foundDevices)
-    }
-
-    override fun onScanFailed(errorCode: Int) {
-        aapsLogger.error(LTag.BGSOURCE, "Scan failed: $errorCode")
         runOnUiThread {
-            progressBar.visibility = View.GONE
-            btnScan.isEnabled = true
-            statusText.text = rh.gs(R.string.libre_scan_failed)
+            deviceAdapter.updateDevices(foundDevices)
         }
     }
 
-    override fun onConnectionStateChanged(connected: Boolean, device: BluetoothDevice?) {
+    override fun onConnected() {
+        // Not used in pairing activity - we finish before connection completes
+    }
+
+    override fun onDisconnected(reason: String) {
         // Not used in pairing activity
     }
 
-    override fun onServicesDiscovered() {
+    override fun onGlucoseData(readings: List<LibreGlucoseReading>) {
         // Not used in pairing activity
     }
 
-    override fun onDataReceived(data: ByteArray) {
+    override fun onSensorInfo(info: LibreSensorInfo) {
         // Not used in pairing activity
     }
 
-    override fun onError(error: String) {
-        aapsLogger.error(LTag.BGSOURCE, "BLE error: $error")
+    override fun onAuthenticationComplete(success: Boolean) {
+        // Not used in pairing activity
+    }
+
+    override fun onError(error: LibreBleError, message: String) {
+        aapsLogger.error(LTag.BGSOURCE, "BLE error: $error - $message")
+        if (error == LibreBleError.SCAN_FAILED) {
+            runOnUiThread {
+                progressBar.visibility = View.GONE
+                btnScan.isEnabled = true
+                statusText.text = rh.gs(R.string.libre_scan_failed)
+            }
+        }
     }
 
     private fun detectSensorType(name: String): LibreSensorType {

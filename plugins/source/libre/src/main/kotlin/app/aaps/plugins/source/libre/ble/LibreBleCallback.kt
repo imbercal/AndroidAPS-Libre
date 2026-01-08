@@ -1,5 +1,6 @@
 package app.aaps.plugins.source.libre.ble
 
+import android.bluetooth.BluetoothDevice
 import app.aaps.plugins.source.libre.data.LibreGlucoseReading
 import app.aaps.plugins.source.libre.data.LibreSensorInfo
 
@@ -7,6 +8,13 @@ import app.aaps.plugins.source.libre.data.LibreSensorInfo
  * Callback interface for Libre BLE communication events.
  */
 interface LibreBleCallback {
+
+    /**
+     * Called when a device is found during scanning
+     * @param device The Bluetooth device found
+     * @param rssi Signal strength
+     */
+    fun onScanResult(device: BluetoothDevice, rssi: Int) {}
 
     /**
      * Called when BLE connection is established
