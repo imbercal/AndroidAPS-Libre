@@ -89,7 +89,7 @@ abstract class LibreProtocol {
     /**
      * Get current state
      */
-    fun getState(): State = state
+    val currentState: State get() = state
 
     companion object {
         // Libre sensor constants
