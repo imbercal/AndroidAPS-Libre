@@ -41,7 +41,9 @@ class LibreSourcePlugin @Inject constructor(
         .pluginName(R.string.libre_source)
         .shortName(R.string.libre_short)
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_libre),
+        .description(R.string.description_source_libre)
+        .visibleByDefault(true)
+        .simpleModePosition(PluginDescription.Position.TAB),
     aapsLogger, rh
 ), BgSource {
 
