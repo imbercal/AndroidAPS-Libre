@@ -467,6 +467,7 @@ class LibreService : DaggerService(), LibreBleCallback {
                 value = reading.glucoseValue,
                 trendArrow = reading.trend,
                 raw = reading.rawValue,
+                noise = null,
                 sourceSensor = when (libreState.sensorType) {
                     LibreSensorType.LIBRE_2 -> SourceSensor.LIBRE_2_DIRECT
                     LibreSensorType.LIBRE_3 -> SourceSensor.LIBRE_3_DIRECT
