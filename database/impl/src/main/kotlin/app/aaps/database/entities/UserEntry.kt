@@ -160,6 +160,7 @@ data class UserEntry(
         Glunovo,
         Intelligo,
         Xdrip,
+        LibreSource,        //From Libre Direct plugin
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin
         Maintenance,        //From Maintenance plugin
