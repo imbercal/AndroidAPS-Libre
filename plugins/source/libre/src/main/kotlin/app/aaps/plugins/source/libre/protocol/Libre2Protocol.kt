@@ -96,7 +96,7 @@ class Libre2Protocol @Inject constructor(
         aapsLogger.debug(LTag.BGSOURCE, "Unlock successful")
         state = State.AUTHENTICATED
         pendingData = ByteArray(0)
-        callback?.onAuthenticationComplete(true)
+        protocolCallback?.onAuthenticationComplete(true)
     }
 
     private fun handlePatchInfoResponse() {
@@ -108,7 +108,7 @@ class Libre2Protocol @Inject constructor(
         if (info != null) {
             sensorInfo = info
             unlockKey = info.patchInfo?.let { generateUnlockKey(it) }
-            callback?.onSensorInfo(info)
+            protocolCallback?.onSensorInfo(info)
         }
 
         pendingData = ByteArray(0)
@@ -130,11 +130,11 @@ class Libre2Protocol @Inject constructor(
 
             val readings = parseGlucoseData(decryptedData)
             if (readings.isNotEmpty()) {
-                callback?.onGlucoseData(readings)
+                protocolCallback?.onGlucoseData(readings)
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.BGSOURCE, "Error parsing glucose data", e)
-            callback?.onError("Failed to parse glucose data: ${e.message}")
+            protocolCallback?.onError("Failed to parse glucose data: ${e.message}")
         }
 
         pendingData = ByteArray(0)
@@ -143,7 +143,7 @@ class Libre2Protocol @Inject constructor(
     override fun startAuthentication() {
         if (unlockKey == null) {
             aapsLogger.error(LTag.BGSOURCE, "Cannot authenticate: no unlock key")
-            callback?.onError("No unlock key available. Sensor may need NFC activation.")
+            protocolCallback?.onError("No unlock key available. Sensor may need NFC activation.")
             state = State.ERROR
             return
         }
@@ -152,7 +152,7 @@ class Libre2Protocol @Inject constructor(
         aapsLogger.debug(LTag.BGSOURCE, "Sending unlock command")
 
         val unlockCmd = createUnlockCommand(unlockKey!!)
-        callback?.sendData(unlockCmd)
+        protocolCallback?.sendData(unlockCmd)
     }
 
     override fun requestGlucoseData() {
@@ -165,7 +165,7 @@ class Libre2Protocol @Inject constructor(
         aapsLogger.debug(LTag.BGSOURCE, "Requesting glucose data")
 
         val cmd = byteArrayOf(CMD_GET_GLUCOSE)
-        callback?.sendData(cmd)
+        protocolCallback?.sendData(cmd)
     }
 
     override fun parseGlucoseData(data: ByteArray): List<LibreGlucoseReading> {

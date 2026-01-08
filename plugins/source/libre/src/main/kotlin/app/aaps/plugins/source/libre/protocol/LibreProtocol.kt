@@ -38,10 +38,10 @@ abstract class LibreProtocol {
         fun sendData(data: ByteArray)
     }
 
-    protected var callback: Callback? = null
+    protected var protocolCallback: Callback? = null
 
-    fun setCallback(callback: Callback) {
-        this.callback = callback
+    fun setCallback(cb: Callback) {
+        this.protocolCallback = cb
     }
 
     /**

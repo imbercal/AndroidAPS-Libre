@@ -118,7 +118,7 @@ class Libre3Protocol @Inject constructor(
         aapsLogger.debug(LTag.BGSOURCE, "Received auth challenge")
 
         if (data.size < 16) {
-            callback?.onError("Invalid auth challenge")
+            protocolCallback?.onError("Invalid auth challenge")
             state = State.ERROR
             return
         }
@@ -136,13 +136,13 @@ class Libre3Protocol @Inject constructor(
         val deviceRandom = generateRandom(8)
         val response = createAuthResponse(deviceInfo, deviceRandom, sensorRandom)
 
-        callback?.sendData(response)
+        protocolCallback?.sendData(response)
     }
 
     private fun handleAuthSuccess(data: ByteArray) {
         aapsLogger.debug(LTag.BGSOURCE, "Authentication successful")
         state = State.AUTHENTICATED
-        callback?.onAuthenticationComplete(true)
+        protocolCallback?.onAuthenticationComplete(true)
 
         // Request initial data
         requestGlucoseData()
@@ -162,7 +162,7 @@ class Libre3Protocol @Inject constructor(
             val readings = parseGlucoseData(decrypted)
 
             if (readings.isNotEmpty()) {
-                callback?.onGlucoseData(readings)
+                protocolCallback?.onGlucoseData(readings)
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.BGSOURCE, "Error processing glucose data", e)
@@ -173,7 +173,7 @@ class Libre3Protocol @Inject constructor(
         val info = parseSensorInfo(data)
         if (info != null) {
             sensorInfo = info
-            callback?.onSensorInfo(info)
+            protocolCallback?.onSensorInfo(info)
         }
     }
 
@@ -181,7 +181,7 @@ class Libre3Protocol @Inject constructor(
         aapsLogger.debug(LTag.BGSOURCE, "Keep-alive received")
         // Send keep-alive response
         val response = createMessage(MSG_KEEP_ALIVE, ByteArray(0))
-        callback?.sendData(response)
+        protocolCallback?.sendData(response)
     }
 
     override fun startAuthentication() {
