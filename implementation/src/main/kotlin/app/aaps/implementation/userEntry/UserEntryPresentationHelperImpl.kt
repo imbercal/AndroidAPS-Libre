@@ -78,10 +78,11 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Glunovo             -> R.drawable.ic_glunovo
         Sources.Intelligo           -> app.aaps.core.ui.R.drawable.ic_intelligo
         Sources.Xdrip               -> R.drawable.ic_blooddrop_48
-        Sources.Ottai    -> R.drawable.ic_syai_tag
-        Sources.SyaiTag  -> R.drawable.ic_syai_tag
-        Sources.SiBionic -> R.drawable.ic_generic_cgm
-        Sources.Sino     -> R.drawable.ic_generic_cgm
+        Sources.Ottai               -> R.drawable.ic_syai_tag
+        Sources.SyaiTag             -> R.drawable.ic_syai_tag
+        Sources.SiBionic            -> R.drawable.ic_generic_cgm
+        Sources.Sino                -> R.drawable.ic_generic_cgm
+        Sources.LibreSource         -> R.drawable.ic_generic_cgm
         Sources.LocalProfile        -> R.drawable.ic_local_profile
         Sources.Loop                -> R.drawable.ic_loop_closed_white
         Sources.Maintenance         -> app.aaps.core.ui.R.drawable.ic_maintenance
