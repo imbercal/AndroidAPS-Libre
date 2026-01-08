@@ -176,6 +176,7 @@ dependencies {
     implementation(project(":plugins:sensitivity"))
     implementation(project(":plugins:smoothing"))
     implementation(project(":plugins:source"))
+    implementation(project(":plugins:source:libre"))
     implementation(project(":plugins:sync"))
     implementation(project(":implementation"))
     implementation(project(":database:impl"))

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Plugin info -->
+    <string name="libre_source">Libre Direct</string>
+    <string name="libre_short">Libre</string>
+    <string name="description_source_libre">Direct BLE connection to FreeStyle Libre 2/3 sensors without bridge apps</string>
+
+    <!-- Settings categories -->
+    <string name="libre_settings">Libre Source Settings</string>
+    <string name="libre_alert_settings">Alert Settings</string>
+    <string name="libre_connection_settings">Connection Settings</string>
+
+    <!-- Sensor change -->
+    <string name="libre_log_sensor_change_title">Log sensor change</string>
+
+    <!-- Expiry alerts -->
+    <string name="libre_expiry_24h_title">24 hour expiry warning</string>
+    <string name="libre_expiry_12h_title">12 hour expiry warning</string>
+    <string name="libre_expiry_1h_title">1 hour expiry warning</string>
+
+    <!-- Connection alerts -->
+    <string name="libre_connection_lost_title">Connection lost alert</string>
+    <string name="libre_auto_reconnect_title">Auto reconnect</string>
+
+    <!-- Notification messages -->
+    <string name="libre_sensor_expired">Libre sensor has expired</string>
+    <string name="libre_sensor_expiry_24h">Libre sensor expires in 24 hours</string>
+    <string name="libre_sensor_expiry_12h">Libre sensor expires in 12 hours</string>
+    <string name="libre_sensor_expiry_1h">Libre sensor expires in 1 hour</string>
+    <string name="libre_connection_lost">Libre sensor connection lost</string>
+    <string name="libre_signal_quality_degraded">Libre signal quality degraded</string>
+    <string name="libre_sensor_error">Libre sensor error</string>
+
+    <!-- Alert messages with placeholders -->
+    <string name="libre_expiry_24h_message">Libre sensor expires in %1$s</string>
+    <string name="libre_expiry_12h_message">Libre sensor expires in %1$s</string>
+    <string name="libre_expiry_1h_message">Libre sensor expires in %1$s</string>
+    <string name="libre_connection_lost_message">Libre sensor disconnected for %1$d minutes</string>
+    <string name="libre_signal_quality_message">Libre signal quality: %1$s</string>
+    <string name="libre_sensor_error_message">Libre sensor error: %1$s</string>
+    <string name="libre_time_hours_minutes">%1$d hours %2$d minutes</string>
+    <string name="libre_time_minutes">%1$d minutes</string>
+
+    <!-- Fragment UI -->
+    <string name="libre_status">Status</string>
+    <string name="libre_latest_reading">Latest Reading</string>
+    <string name="libre_sensor_serial">Sensor Serial</string>
+    <string name="libre_sensor_age">Sensor Age</string>
+    <string name="libre_time_remaining">Time Remaining</string>
+    <string name="libre_connection_status">Connection</string>
+    <string name="libre_pair_new_sensor">Pair New Sensor</string>
+    <string name="libre_disconnect">Disconnect</string>
+    <string name="libre_no_sensor">No sensor paired</string>
+
+    <!-- Connection states -->
+    <string name="libre_state_disconnected">Disconnected</string>
+    <string name="libre_state_scanning">Scanning…</string>
+    <string name="libre_state_connecting">Connecting…</string>
+    <string name="libre_state_connected">Connected</string>
+    <string name="libre_state_authenticating">Authenticating…</string>
+    <string name="libre_state_reconnecting">Reconnecting…</string>
+
+    <!-- Sensor states -->
+    <string name="libre_sensor_state_none">No sensor</string>
+    <string name="libre_sensor_state_starting">Warming up</string>
+    <string name="libre_sensor_state_ready">Ready</string>
+    <string name="libre_sensor_state_ending">Ending soon</string>
+    <string name="libre_sensor_state_expired">Expired</string>
+    <string name="libre_sensor_state_error">Error</string>
+</resources>

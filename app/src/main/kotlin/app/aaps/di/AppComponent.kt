@@ -13,6 +13,7 @@ import app.aaps.plugins.constraints.di.PluginsConstraintsModule
 import app.aaps.plugins.insulin.di.InsulinModule
 import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
+import app.aaps.plugins.source.libre.di.LibreModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
 import app.aaps.pump.common.di.PumpCommonModule
@@ -68,6 +69,7 @@ import javax.inject.Singleton
         ValidatorsModule::class,
         PluginsConstraintsModule::class,
         SourceModule::class,
+        LibreModule::class,
         SyncModule::class,
         WorkflowModule::class,
 

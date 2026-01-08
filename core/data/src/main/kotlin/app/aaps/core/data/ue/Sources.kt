@@ -37,6 +37,7 @@ enum class Sources {
     Glunovo,
     Intelligo,
     Xdrip,
+    LibreSource,        //From Libre Direct plugin
     Ottai,              //From Ottai Plugin
     SyaiTag,
     SiBionic,

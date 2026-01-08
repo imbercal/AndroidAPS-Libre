@@ -143,6 +143,13 @@ open class Notification {
         const val AAPS_DIR_NOT_SELECTED = 92
         const val EQUIL_ALARM = 93
         const val EQUIL_ALARM_INSULIN = 94
+        const val LIBRE_SENSOR_EXPIRY_24H = 95
+        const val LIBRE_SENSOR_EXPIRY_12H = 96
+        const val LIBRE_SENSOR_EXPIRY_1H = 97
+        const val LIBRE_SENSOR_EXPIRED = 98
+        const val LIBRE_CONNECTION_LOST = 99
+        const val LIBRE_SIGNAL_QUALITY = 100
+        const val LIBRE_SENSOR_ERROR = 101
 
         const val USER_MESSAGE = 1000
 
