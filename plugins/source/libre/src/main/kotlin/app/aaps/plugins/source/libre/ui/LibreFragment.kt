@@ -238,14 +238,9 @@ class LibreFragment : DaggerFragment() {
     private fun onPairClicked() {
         aapsLogger.debug(LTag.BGSOURCE, "Pair button clicked")
 
-        // Start scanning via service
-        val intent = Intent(requireContext(), LibreService::class.java).apply {
-            action = LibreService.ACTION_SCAN
-        }
-        requireContext().startService(intent)
-
-        // TODO: Launch pairing activity in future (Phase 5 continuation)
-        // For now, just start scan
+        // Launch pairing activity
+        val intent = Intent(requireContext(), LibrePairingActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onDisconnectClicked() {

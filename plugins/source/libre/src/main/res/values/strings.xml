@@ -52,6 +52,15 @@
     <string name="libre_disconnect">Disconnect</string>
     <string name="libre_no_sensor">No sensor paired</string>
 
+    <!-- Pairing activity -->
+    <string name="libre_pair_sensor">Pair Sensor</string>
+    <string name="libre_scan">Scan</string>
+    <string name="libre_tap_scan">Tap Scan to search for nearby sensors</string>
+    <string name="libre_permission_denied">Bluetooth permissions denied</string>
+    <string name="libre_no_devices_found">No Libre sensors found</string>
+    <string name="libre_select_device">Select a sensor to pair</string>
+    <string name="libre_scan_failed">Scan failed</string>
+
     <!-- Connection states -->
     <string name="libre_state_disconnected">Disconnected</string>
     <string name="libre_state_scanning">Scanning…</string>

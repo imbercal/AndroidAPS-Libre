@@ -39,6 +39,12 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
+
+        <!-- Pairing activity for connecting to Libre sensors -->
+        <activity
+            android:name=".ui.LibrePairingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight" />
     </application>
 
 </manifest>
